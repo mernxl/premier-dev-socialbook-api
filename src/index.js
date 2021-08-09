@@ -1,17 +1,23 @@
 const http = require('http');
 
+// require will convert this into a JS object
+const users = require('./db/users.json');
+const posts = require('./db/posts.json');
+
 const PORT = 4000;
 
 const server = http.createServer((request, response) => {
 
   if (request.url === '/posts') {
     response.statusCode = 200;
-    return response.end('Post list\n');
+    response.write(JSON.stringify(posts));
+    return response.end();
   }
 
   if (request.url === '/users') {
     response.statusCode = 200;
-    return response.end('User list\n');
+    response.write(JSON.stringify(users));
+    return response.end();
   }
 
   if (request.url === '/') {
