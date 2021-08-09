@@ -6,6 +6,11 @@ const server = http.createServer((request, response) => {
 
   response.statusCode = 200;
 
+  // listen to and log out errors
+  response.on('error', (err => {
+    console.error(err)
+  }))
+
   response.end('Hello World\n')
 })
 
