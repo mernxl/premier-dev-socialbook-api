@@ -3,13 +3,22 @@
   "version": "1.0.0",
   "description": "SocialBook REST API",
   "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mernxl/premier-dev-socialbook-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mernxl/premier-dev-socialbook-api/issues"
+  },
+  "homepage": "https://github.com/mernxl/premier-dev-socialbook-api#readme",
+  "author": "",
+  "license": "MIT",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon -w src src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "nodemon": "^2.0.12"
   }
