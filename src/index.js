@@ -2,6 +2,7 @@ const http = require('http');
 
 /*
  * Adding right headers to responses
+ * - Request Methods (GET and POST)
  */
 
 // require will convert this into a JS object
@@ -12,6 +13,9 @@ const PORT = 4000;
 
 
 const server = http.createServer((request, response) => {
+
+  // normalise the method to uppercase
+  const method = request.method.toUpperCase();
 
   if (request.url === '/posts') {
     response.statusCode = 200;
@@ -24,11 +28,46 @@ const server = http.createServer((request, response) => {
   }
 
   if (request.url === '/users') {
-    response.statusCode = 200;
-    response.setHeader('Content-Type', 'application/json');
 
-    response.write(JSON.stringify(users));
-    return response.end();
+    if (method === 'GET') {
+      response.statusCode = 200;
+      response.setHeader('Content-Type', 'application/json');
+
+      response.write(JSON.stringify(users));
+      return response.end();
+    }
+
+    if (method === 'POST') {
+      let body = [];
+
+      // listen to data stream from the client
+      return request.on('data', chunk => {
+        body.push(chunk);
+      })
+        .on('end', () => {
+          // convert the buffer array to a string
+          body = Buffer.concat(body).toString();
+
+          response.on('error', (err) => {
+            console.error(err);
+          });
+
+          // convert the string to an object
+          try {
+            // without this try catch block, an error in the JSON format will kill our server
+            body = JSON.parse(body); // use the object for what ever reason
+          } catch (e) {
+            response.statusCode = 500;
+            return response.end();
+          }
+
+          response.statusCode = 200;
+          response.setHeader('Content-Type', 'application/json');
+
+          response.end(JSON.stringify(body));
+        });
+    }
+
   }
 
   if (request.url === '/') {
