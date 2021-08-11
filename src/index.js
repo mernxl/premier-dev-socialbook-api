@@ -9,7 +9,8 @@ const http = require('http');
 const users = require('./db/users.json');
 const posts = require('./db/posts.json');
 
-const PORT = 4000;
+// heruko sets a port on the PORT env var
+const PORT = process.env.PORT || 4000;
 
 
 const server = http.createServer((request, response) => {
