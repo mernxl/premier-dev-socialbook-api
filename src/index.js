@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 /*
  * Adding right headers to responses
@@ -17,6 +18,10 @@ const PORT = process.env.PORT || 4000;
 // create express application
 const app = express();
 
+// parse body params and attach them to req.body
+app.use(bodyParser.json())  // parses application/json content
+app.use(bodyParser.text())  // parses text/plain content
+
 app.get('/posts', (req, res) => {
   res.send(posts); // will stringify, set json headers, set status code
 });
@@ -26,26 +31,7 @@ app.get('/users', (req, res) => {
 });
 
 app.post('/users', (req, res, next) => {
-  let body = [];
-
-  // listen to data stream from the client
-  return req.on('data', chunk => {
-    body.push(chunk);
-  })
-    .on('end', () => {
-      // convert the buffer array to a string
-      body = Buffer.concat(body).toString();
-
-      // convert the string to an object
-      try {
-        // without this try catch block, an error in the JSON format will kill our server
-        body = JSON.parse(body); // use the object for what ever reason
-      } catch (e) {
-        return next(e); // will call the error handler of express
-      }
-
-      res.send(body);
-    });
+  res.send(req.body);
 });
 
 app.get('/', (req, res) => {
