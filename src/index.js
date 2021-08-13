@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 /*
@@ -17,6 +18,9 @@ const PORT = process.env.PORT || 4000;
 
 // create express application
 const app = express();
+
+// log requests coming into our app
+app.use(morgan('dev'))
 
 // parse body params and attach them to req.body
 app.use(bodyParser.json())  // parses application/json content
