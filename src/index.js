@@ -40,13 +40,24 @@ app.get('/users/:id', (req, res) => {
   let user = users.find(user => user.id == id);
   if(typeof(user) === "undefined"){
     console.log(`No user with id=${id} found`);
-    res.send(`No user with id=${id} found`)
+    res.sendStatus(404)
   } else {
-    console.log(user);
+    // console.log(user);
     res.send(user);
   }
-   
-})
+});
+
+// will get a particular user
+app.get('/posts/:id', (req, res) => {
+  let id = req.params.id;
+  let post = posts.find(post => post.id == id);
+  if(typeof(post) === "undefined"){
+    res.sendStatus(404)
+  } else {
+    // console.log(post);
+    res.send(post);
+  }
+});
 
 app.post('/users', (req, res, next) => {
   res.send(req.body);
