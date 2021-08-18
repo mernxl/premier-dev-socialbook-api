@@ -34,6 +34,20 @@ app.get('/users', (req, res) => {
   res.send(users);
 });
 
+// will get a particular user
+app.get('/users/:id', (req, res) => {
+  let id = req.params.id;
+  let user = users.find(user => user.id == id);
+  if(typeof(user) === "undefined"){
+    console.log(`No user with id=${id} found`);
+    res.send(`No user with id=${id} found`)
+  } else {
+    console.log(user);
+    res.send(user);
+  }
+   
+})
+
 app.post('/users', (req, res, next) => {
   res.send(req.body);
 });
