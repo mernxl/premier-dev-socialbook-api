@@ -34,12 +34,24 @@ app.get('/users', (req, res) => {
   res.send(users);
 });
 
+app.get('/users/:id', (req, res) => {
+  var id = req.params.id.toString();
+  users.findById(id)
+  .then(userFound => {
+    if(!userFound){
+      return res.status(404).end()
+    }
+    return res.status(200).json(userFound);
+  })
+  .catch(err => next(err));
+});
+
 app.post('/users', (req, res, next) => {
   res.send(req.body);
 });
 
 app.get('/', (req, res) => {
-  res.send('Hello World\n');
+  res.send('Hello B World\n');
 });
 
 app.use((req, res) => {
