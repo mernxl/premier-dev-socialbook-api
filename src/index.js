@@ -11,7 +11,10 @@ const bodyParser = require('body-parser');
  */
 
 // import the db, users, posts collections
-const {UsersC, PostsC} = require('./db')
+const { UsersC, PostsC } = require('./db');
+
+// import dummy data
+require('../import-data');
 
 // heruko sets a port on the PORT env var
 const PORT = process.env.PORT || 4000;
@@ -51,7 +54,7 @@ app.get('/users/:id', async (req, res) => {
 
 // will get a particular post
 app.get('/posts/:id', async (req, res) => {
-  let post = await PostsC.findOne({ _id: req.params.id}); // get a post by _id
+  let post = await PostsC.findOne({ _id: req.params.id }); // get a post by _id
 
   if (post) {
     res.send(post);
@@ -60,7 +63,7 @@ app.get('/posts/:id', async (req, res) => {
   }
 });
 
-app.post('/users', (req, res, next) => {
+app.post('/users', (req, res) => {
   res.send(req.body);
 });
 
@@ -73,7 +76,7 @@ app.use((req, res) => {
 });
 
 // Error handler, first param of callback is the error passed in through next
-app.use((error, req, res, next) => {
+app.use((error, req, res) => {
   console.error(error);
 
   res.sendStatus(500);
