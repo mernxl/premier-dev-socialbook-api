@@ -20,11 +20,11 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 
 // log requests coming into our app
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 
 // parse body params and attach them to req.body
-app.use(bodyParser.json())  // parses application/json content
-app.use(bodyParser.text())  // parses text/plain content
+app.use(bodyParser.json());  // parses application/json content
+app.use(bodyParser.text());  // parses text/plain content
 
 app.get('/posts', (req, res) => {
   res.send(posts); // will stringify, set json headers, set status code
@@ -37,25 +37,24 @@ app.get('/users', (req, res) => {
 // will get a particular user
 app.get('/users/:id', (req, res) => {
   let id = req.params.id;
-  let user = users.find(user => user.id == id);
-  if(user){
-    console.log(`No user with id=${id} found`);
-    res.sendStatus(404)
-  } else {
-    // console.log(user);
+  let user = users.find(user => user.id.toString() === id);
+
+  if (user) {
     res.send(user);
+  } else {
+    res.sendStatus(404);
   }
 });
 
 // will get a particular post
 app.get('/posts/:id', (req, res) => {
   let id = req.params.id;
-  let post = posts.find(post => post.id == id);
-  if(post){
-    res.sendStatus(404)
-  } else {
-    // console.log(post);
+  let post = posts.find(post => post.id.toString() === id);
+
+  if (post) {
     res.send(post);
+  } else {
+    res.sendStatus(404);
   }
 });
 
@@ -68,14 +67,14 @@ app.get('/', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.sendStatus(404)
+  res.sendStatus(404);
 });
 
 // Error handler, first param of callback is the error passed in through next
 app.use((error, req, res, next) => {
   console.error(error);
 
-  res.sendStatus(500)
+  res.sendStatus(500);
 });
 
 app.listen(PORT, () => {
