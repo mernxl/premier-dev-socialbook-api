@@ -38,7 +38,7 @@ app.get('/users', (req, res) => {
 app.get('/users/:id', (req, res) => {
   let id = req.params.id;
   let user = users.find(user => user.id == id);
-  if(typeof(user) === "undefined"){
+  if(user){
     console.log(`No user with id=${id} found`);
     res.sendStatus(404)
   } else {
@@ -47,11 +47,11 @@ app.get('/users/:id', (req, res) => {
   }
 });
 
-// will get a particular user
+// will get a particular post
 app.get('/posts/:id', (req, res) => {
   let id = req.params.id;
   let post = posts.find(post => post.id == id);
-  if(typeof(post) === "undefined"){
+  if(post){
     res.sendStatus(404)
   } else {
     // console.log(post);
