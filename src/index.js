@@ -7,11 +7,11 @@ const bodyParser = require('body-parser');
  * - Request Methods (GET and POST)
  *
  * - switch to express
+ * - add mongodb
  */
 
-// require will convert this into a JS object
-const users = require('./db/users.json');
-const posts = require('./db/posts.json');
+// import the db, users, posts collections
+const {UsersC, PostsC} = require('./db')
 
 // heruko sets a port on the PORT env var
 const PORT = process.env.PORT || 4000;
@@ -26,18 +26,21 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());  // parses application/json content
 app.use(bodyParser.text());  // parses text/plain content
 
-app.get('/posts', (req, res) => {
+app.get('/posts', async (req, res) => {
+  const posts = await PostsC.find().toArray(); // get posts cursor, convert to array
+
   res.send(posts); // will stringify, set json headers, set status code
 });
 
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
+  const users = await UsersC.find().toArray();  // get users cursor, convert to array
+
   res.send(users);
 });
 
 // will get a particular user
-app.get('/users/:id', (req, res) => {
-  let id = req.params.id;
-  let user = users.find(user => user.id.toString() === id);
+app.get('/users/:id', async (req, res) => {
+  let user = await UsersC.findOne({ _id: req.params.id }); // get a user by his _id
 
   if (user) {
     res.send(user);
@@ -47,9 +50,8 @@ app.get('/users/:id', (req, res) => {
 });
 
 // will get a particular post
-app.get('/posts/:id', (req, res) => {
-  let id = req.params.id;
-  let post = posts.find(post => post.id.toString() === id);
+app.get('/posts/:id', async (req, res) => {
+  let post = await PostsC.findOne({ _id: req.params.id}); // get a post by _id
 
   if (post) {
     res.send(post);
