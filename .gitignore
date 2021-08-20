@@ -3,3 +3,4 @@
 
 # don't include dependencies
 node_modules/
+.vscode/

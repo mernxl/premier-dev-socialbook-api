@@ -3,18 +3,21 @@
     "name": "Junior",
     "username": "jboy",
     "email": "jboy@gmail.com",
-    "createdAt": "2021-08-09T14:11:55.383Z"
+    "createdAt": "2021-08-09T14:11:55.383Z",
+    "id": 1
   },
   {
     "name": "Zenith",
     "username": "insanecoder",
     "email": "insanecoder@gmail.com",
-    "createdAt": "2021-08-09T14:11:55.383Z"
+    "createdAt": "2021-08-09T14:11:55.383Z",
+    "id": 2
   },
   {
     "name": "Pateson",
     "username": "pat",
     "email": "pat@gmail.com",
-    "createdAt": "2021-08-09T14:11:55.383Z"
+    "createdAt": "2021-08-09T14:11:55.383Z",
+    "id": 3
   }
 ]

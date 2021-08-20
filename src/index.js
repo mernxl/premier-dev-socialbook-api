@@ -34,6 +34,31 @@ app.get('/users', (req, res) => {
   res.send(users);
 });
 
+// will get a particular user
+app.get('/users/:id', (req, res) => {
+  let id = req.params.id;
+  let user = users.find(user => user.id == id);
+  if(user){
+    console.log(`No user with id=${id} found`);
+    res.sendStatus(404)
+  } else {
+    // console.log(user);
+    res.send(user);
+  }
+});
+
+// will get a particular post
+app.get('/posts/:id', (req, res) => {
+  let id = req.params.id;
+  let post = posts.find(post => post.id == id);
+  if(post){
+    res.sendStatus(404)
+  } else {
+    // console.log(post);
+    res.send(post);
+  }
+});
+
 app.post('/users', (req, res, next) => {
   res.send(req.body);
 });
