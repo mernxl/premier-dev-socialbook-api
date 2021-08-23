@@ -3,6 +3,9 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const ObjectID = require('mongodb').ObjectId;
 
+const userRouter = require('./routes/users');
+const postRouter = require('./routes/posts');
+
 /*
  * Adding right headers to responses
  * - Request Methods (GET and POST)
@@ -30,53 +33,16 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());  // parses application/json content
 app.use(bodyParser.text());  // parses text/plain content
 
-app.get('/posts', async (req, res) => {
-  const posts = await PostsC.find().toArray(); // get posts cursor, convert to array
 
-  res.send(posts); // will stringify, set json headers, set status code
-});
-
-app.get('/users', async (req, res) => {
-  const users = await UsersC.find().toArray();  // get users cursor, convert to array
-
-  res.send(users);
-});
-
-// will get a particular user
-app.get('/users/:id', async (req, res) => {  
-  let id = '';
-  if(ObjectID.isValid(req.params.id)){
-    id = new ObjectID(req.params.id);
-  }
-  const user = await UsersC.findOne({_id: id});
-  if(user){
-    res.send(user);
-  } else {
-    res.sendStatus(404);
-    console.log("User not found. 404")
-  }
-
-});
-
+// posts
+app.use('/posts', postRouter);
 // will get a particular post
-app.get('/posts/:id', async (req, res) => {
-  let id = '';
-  if(ObjectID.isValid(req.params.id)){
-    id = new ObjectID(req.params.id);
-  }
-  const post = await PostsC.findOne({_id: id});
-  if(post){
-    res.send(post);
-  } else {
-    res.sendStatus(404);
-    console.log("User not found. 404")
-  }
+app.use('/posts/:id', postRouter);
 
-});
+app.use('/users', userRouter);
+// will get a particular user
+app.use('/users/:id', userRouter);
 
-app.post('/users', (req, res) => {
-  res.send(req.body);
-});
 
 app.get('/', (req, res) => {
   res.send('Hello World\n');
