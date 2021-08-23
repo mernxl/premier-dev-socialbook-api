@@ -14,7 +14,7 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "start": "nodejs src/index.js",
+    "start": "node src/index.js",
     "dev": "nodemon -w src src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
