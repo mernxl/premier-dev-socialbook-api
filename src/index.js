@@ -7,11 +7,14 @@ const bodyParser = require('body-parser');
  * - Request Methods (GET and POST)
  *
  * - switch to express
+ * - add mongodb
  */
 
-// require will convert this into a JS object
-const users = require('./db/users.json');
-const posts = require('./db/posts.json');
+// import the db, users, posts collections
+const { UsersC, PostsC } = require('./db');
+
+// import dummy data
+require('../import-data');
 
 // heruko sets a port on the PORT env var
 const PORT = process.env.PORT || 4000;
@@ -20,46 +23,47 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 
 // log requests coming into our app
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 
 // parse body params and attach them to req.body
-app.use(bodyParser.json())  // parses application/json content
-app.use(bodyParser.text())  // parses text/plain content
+app.use(bodyParser.json());  // parses application/json content
+app.use(bodyParser.text());  // parses text/plain content
 
-app.get('/posts', (req, res) => {
+app.get('/posts', async (req, res) => {
+  const posts = await PostsC.find().toArray(); // get posts cursor, convert to array
+
   res.send(posts); // will stringify, set json headers, set status code
 });
 
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
+  const users = await UsersC.find().toArray();  // get users cursor, convert to array
+
   res.send(users);
 });
 
 // will get a particular user
-app.get('/users/:id', (req, res) => {
-  let id = req.params.id;
-  let user = users.find(user => user.id == id);
-  if(user){
-    console.log(`No user with id=${id} found`);
-    res.sendStatus(404)
-  } else {
-    // console.log(user);
+app.get('/users/:id', async (req, res) => {
+  let user = await UsersC.findOne({ _id: req.params.id }); // get a user by his _id
+
+  if (user) {
     res.send(user);
+  } else {
+    res.sendStatus(404);
   }
 });
 
 // will get a particular post
-app.get('/posts/:id', (req, res) => {
-  let id = req.params.id;
-  let post = posts.find(post => post.id == id);
-  if(post){
-    res.sendStatus(404)
-  } else {
-    // console.log(post);
+app.get('/posts/:id', async (req, res) => {
+  let post = await PostsC.findOne({ _id: req.params.id }); // get a post by _id
+
+  if (post) {
     res.send(post);
+  } else {
+    res.sendStatus(404);
   }
 });
 
-app.post('/users', (req, res, next) => {
+app.post('/users', (req, res) => {
   res.send(req.body);
 });
 
@@ -68,14 +72,14 @@ app.get('/', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.sendStatus(404)
+  res.sendStatus(404);
 });
 
 // Error handler, first param of callback is the error passed in through next
-app.use((error, req, res, next) => {
+app.use((error, req, res) => {
   console.error(error);
 
-  res.sendStatus(500)
+  res.sendStatus(500);
 });
 
 app.listen(PORT, () => {
