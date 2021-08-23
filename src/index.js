@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
+const { ObjectId } = require('mongodb');
+
 /*
  * Adding right headers to responses
  * - Request Methods (GET and POST)
@@ -43,18 +45,22 @@ app.get('/users', async (req, res) => {
 
 // will get a particular user
 app.get('/users/:id', async (req, res) => {
-  let user = await UsersC.findOne({ _id: req.params.id }); // get a user by his _id
-
+  if (ObjectId.isValid(req.params.id)) // validate id as ObjectId
+  {let user = await UsersC.findOne({ _id: new ObjectId(req.params.id) }); // get a user by his _id
+  const obj = new ObjectId(req.params.id)
+  obj.toHexString()
   if (user) {
     res.send(user);
   } else {
     res.sendStatus(404);
   }
-});
+} else {
+  res.sendStatus(400);
+} } )
 
 // will get a particular post
 app.get('/posts/:id', async (req, res) => {
-  let post = await PostsC.findOne({ _id: req.params.id }); // get a post by _id
+  let post = await PostsC.findOne({ _id: new ObjectId(req.params.id) }); // get a post by _id
 
   if (post) {
     res.send(post);
