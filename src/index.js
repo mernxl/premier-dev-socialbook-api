@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const ObjectID = require('mongodb').ObjectId;
 
 /*
  * Adding right headers to responses
@@ -42,25 +43,35 @@ app.get('/users', async (req, res) => {
 });
 
 // will get a particular user
-app.get('/users/:id', async (req, res) => {
-  let user = await UsersC.findOne({ _id: req.params.id }); // get a user by his _id
-
-  if (user) {
+app.get('/users/:id', async (req, res) => {  
+  let id = '';
+  if(ObjectID.isValid(req.params.id)){
+    id = new ObjectID(req.params.id);
+  }
+  const user = await UsersC.findOne({_id: id});
+  if(user){
     res.send(user);
   } else {
     res.sendStatus(404);
+    console.log("User not found. 404")
   }
+
 });
 
 // will get a particular post
 app.get('/posts/:id', async (req, res) => {
-  let post = await PostsC.findOne({ _id: req.params.id }); // get a post by _id
-
-  if (post) {
+  let id = '';
+  if(ObjectID.isValid(req.params.id)){
+    id = new ObjectID(req.params.id);
+  }
+  const post = await PostsC.findOne({_id: id});
+  if(post){
     res.send(post);
   } else {
     res.sendStatus(404);
+    console.log("User not found. 404")
   }
+
 });
 
 app.post('/users', (req, res) => {
