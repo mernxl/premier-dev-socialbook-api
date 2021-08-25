@@ -45,32 +45,33 @@ app.get('/users', async (req, res) => {
 
 // will get a particular user
 app.get('/users/:id', async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) // validate id as ObjectId
-  {let user = await UsersC.findOne({ _id: new ObjectId(req.params.id) }); // get a user by his _id
-  const obj = new ObjectId(req.params.id)
-  obj.toHexString()
-  if (user) {
-    res.send(user);
+  // validate id as ObjectId
+  if (ObjectId.isValid(req.params.id)) {
+    let user = await UsersC.findOne({ _id: new ObjectId(req.params.id) }); // get a user by his _id
+
+    if (user) {
+      res.send(user);
+    } else {
+      res.sendStatus(404);
+    }
   } else {
-    res.sendStatus(404);
+    res.sendStatus(400);
   }
-} else {
-  res.sendStatus(400);
-} } )
+});
 
 // will get a particular post
 app.get('/posts/:id', async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
-  let post = await PostsC.findOne({ _id: new ObjectId(req.params.id) }); // get a post by _id
+    let post = await PostsC.findOne({ _id: new ObjectId(req.params.id) }); // get a post by _id
 
-  if (post) {
-    res.send(post);
+    if (post) {
+      res.send(post);
+    } else {
+      res.sendStatus(404);
+    }
   } else {
-    res.sendStatus(404);
+    res.sendStatus(400).send("User ID does not meet the required standards");
   }
-} else {
-  res.sendStatus(400).send("User ID does not meet the required standards");
-}
 });
 
 app.post('/users', (req, res) => {
