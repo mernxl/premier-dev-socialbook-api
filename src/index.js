@@ -60,6 +60,7 @@ app.get('/users/:id', async (req, res) => {
 
 // will get a particular post
 app.get('/posts/:id', async (req, res) => {
+  if (ObjectId.isValid(req.params.id)) {
   let post = await PostsC.findOne({ _id: new ObjectId(req.params.id) }); // get a post by _id
 
   if (post) {
@@ -67,6 +68,9 @@ app.get('/posts/:id', async (req, res) => {
   } else {
     res.sendStatus(404);
   }
+} else {
+  res.sendStatus(400).send("User ID does not meet the required standards");
+}
 });
 
 app.post('/users', (req, res) => {
