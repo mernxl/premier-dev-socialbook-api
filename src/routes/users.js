@@ -1,9 +1,10 @@
 const router = require("express").Router();
 const User = require("../models/User");
+const auth = require('./auth.middleware');
 
 
 // get all users
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   const user = await User.find({});
   if (user.length > 0) {
     console.log("found user object", user);
@@ -17,7 +18,7 @@ router.get("/", async (req, res) => {
 });
 
 // get unique user
-router.get("/:id", (req, res) => {
+router.get("/:id", auth, (req, res) => {
   const user = User.findById(req.params.id)
     .then((result) => {
       res.status(200).json({
@@ -44,7 +45,7 @@ router.get("/:id", (req, res) => {
 
 
 // update a user
-router.put("/update/:id", async (req, res) => {
+router.put("/update/:id", auth, async (req, res) => {
   let user = await User.findOne({ _id: req.params.id });
   User.updateOne({ _id: req.params.id }, req.body)
     .then((result) => {
@@ -64,7 +65,7 @@ router.put("/update/:id", async (req, res) => {
 });
 
 // delete a user
-router.delete("/delete/:id", (req, res) => {
+router.delete("/delete/:id", auth, (req, res) => {
   const user = User.findByIdAndDelete(req.params.id)
     .then((result) => {
       res.status(200).json({
