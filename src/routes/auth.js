@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
 const User  = require('../models/User');
+const dontenv = require('dotenv');
+dontenv.config();
 
 // find a user with unique id
 async function findUniqueUser(credentials = {}) {
@@ -15,19 +18,32 @@ async function findUniqueUser(credentials = {}) {
 // register
 router.post('/login', async (req, res, next) => {
   const user = await User.findOne({email: req.body.email})
-  const validPassword = await bcrypt.compare(req.body.password, user.password);
-
- if(validPassword){
-   res.status(200).json({
-    status: 200,
-    message: "Valid user." // generate jwt now and set cookies
-   })
- } else {
-  res.status(404).json({
-    status: 404,
-    message: "Invalid credentials" // generate jwt now and set cookies
-   })
- }
+  if(user){
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    if(validPassword){
+      const token = jwt.sign({email: user.email, id: user._id}, process.env.JWT_SECRET, {
+        expiresIn: "1h"
+      })
+      res.status(200).json({
+       status: 200,
+       message: "Valid user.",
+       email: user.email,
+       token: token // generate jwt now and set cookies
+      })
+    } else {
+     res.status(404).json({
+       status: 404,
+       message: "Invalid credentials" // generate jwt now and set cookies
+      })
+    }
+  } else {
+    res.status(404).json({
+      status: 404,
+      message: "Auth failed "// generate jwt now and set cookies
+     })
+  }
+ 
+ 
   // post login credetectionalse
 })
 
