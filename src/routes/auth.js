@@ -31,14 +31,14 @@ router.post('/login', async (req, res, next) => {
        token: token // generate jwt now and set cookies
       })
     } else {
-     res.status(404).json({
-       status: 404,
+     res.status(401).json({
+       status: 401,
        message: "Invalid credentials" // generate jwt now and set cookies
       })
     }
   } else {
-    res.status(404).json({
-      status: 404,
+    res.status(401).json({
+      status: 401,
       message: "Auth failed "// generate jwt now and set cookies
      })
   }
