@@ -2,8 +2,18 @@ const router = require('express').Router();
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const User  = require('../models/User');
-const dontenv = require('dotenv');
-dontenv.config();
+require('dotenv').config();
+const multer  = require('multer');
+const storage = multer.diskStorage({
+  destination: (req, res, cb) => {
+    cb(null, './uploads');
+  },
+  filename: (req, file, cb)=>{
+    cb(null, new Date().toISOString() + file.originalname);
+  }
+})
+const upload = multer({ storage });
+
 
 // find a user with unique id
 async function findUniqueUser(credentials = {}) {
@@ -15,7 +25,7 @@ async function findUniqueUser(credentials = {}) {
   return false;
 }
 
-// register
+//login
 router.post('/login', async (req, res, next) => {
   const user = await User.findOne({email: req.body.email})
   if(user){
@@ -47,7 +57,9 @@ router.post('/login', async (req, res, next) => {
   // post login credetectionalse
 })
 
-router.post("/register", async (req, res) => {
+// register
+router.post("/register", upload.single('avatar') , async (req, res, next) => {
+  // crosscheck for unique user
   const credentials = {
     name: req.body.name,
     email: req.body.email,
@@ -61,7 +73,7 @@ router.post("/register", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     const user = await new User({
-      ...req.body,
+      ...req.body, avatar: req.file.path,
       password: hashedPassword,
     });
 
