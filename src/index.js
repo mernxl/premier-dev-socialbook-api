@@ -45,7 +45,6 @@ app.use('/users', userRouter);
 // app.use('/users/register', userRouter);
 app.use('/api/v1/auth', authRouter);
 
-
 app.get('/', (req, res) => {
   res.send('Hello World\n');
 });
