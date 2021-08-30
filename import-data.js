@@ -14,7 +14,6 @@ const importData = async () => {
   // create count random users
   const users = Array(count).fill(null).map(() => ({
     name: faker.name.findName(),
-    username: faker.internet.userName(),
     email: faker.internet.email(),
   }));
 
