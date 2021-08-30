@@ -1,12 +1,11 @@
 const express = require('express');
 const { ObjectId } = require('mongodb');
 
-const { PostsC } = require('../../db');
+const { PostModel } = require('./model');
 const router = express.Router();
 
-
 router.get('/', async (req, res) => {
-  const posts = await PostsC.find().toArray(); // get posts cursor, convert to array
+  const posts = await PostModel.find().exec(); // get posts cursor, convert to array
 
   res.send(posts); // will stringify, set json headers, set status code
 });
@@ -14,7 +13,7 @@ router.get('/', async (req, res) => {
 // will get a particular post
 router.get('/:id', async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
-    let post = await PostsC.findOne({ _id: new ObjectId(req.params.id) }); // get a post by _id
+    let post = await PostModel.findOne({ _id: new ObjectId(req.params.id) }); // get a post by _id
 
     if (post) {
       res.send(post);

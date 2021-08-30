@@ -1,11 +1,12 @@
 const express = require('express');
 const { ObjectId } = require('mongodb');
 
-const { UsersC } = require('../../db');
+const { UserModel } = require('./model');
+
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const users = await UsersC.find().toArray();  // get users cursor, convert to array
+  const users = await UserModel.find().exec();  // get users cursor, convert to array
 
   res.send(users);
 });
@@ -18,7 +19,7 @@ router.post('/', (req, res) => {
 router.get('/users/:id', async (req, res) => {
   // validate id as ObjectId
   if (ObjectId.isValid(req.params.id)) {
-    let user = await UsersC.findOne({ _id: new ObjectId(req.params.id) }); // get a user by his _id
+    let user = await UserModel.findOne({ _id: new ObjectId(req.params.id) }); // get a user by his _id
 
     if (user) {
       res.send(user);
