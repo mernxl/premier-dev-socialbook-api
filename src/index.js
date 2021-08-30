@@ -6,13 +6,13 @@ const mongoose = require('mongoose');
 const userRouter = require('./routes/users');
 const postRouter = require('./routes/posts');
 const authRouter = require('./routes/auth');
-{/*
+/*
  * Adding right headers to responses
  * - Request Methods (GET and POST)
  *
  * - switch to express
  * - add mongodb
- */}
+ */
 
 // import dummy data
 // require('../import-data');
@@ -33,16 +33,11 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());  // parses application/json content
 app.use(bodyParser.text());  // parses text/plain content
 
-
 // posts
 app.use('/posts', postRouter);
-// will get a particular post
-// app.use('/posts/:id', postRouter);
-
+// users 
 app.use('/users', userRouter);
-// will get a particular user
-// app.use('/users/:id', userRouter);
-// app.use('/users/register', userRouter);
+// user auth
 app.use('/api/v1/auth', authRouter);
 
 app.get('/', (req, res) => {
