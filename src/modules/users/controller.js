@@ -47,7 +47,7 @@ router.post('/sign-in', async (req, res, next) => {
 });
 
 // will get a particular user
-router.get('/users/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   // validate id as ObjectId
   if (ObjectId.isValid(req.params.id)) {
     let user = await UserModel.findOne({ _id: new ObjectId(req.params.id) }); // get a user by his _id
