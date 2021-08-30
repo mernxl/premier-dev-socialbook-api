@@ -1,9 +1,11 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
-const { ObjectId } = require('mongodb');
-
+const userRouter = require('./routes/users');
+const postRouter = require('./routes/posts');
+const authRouter = require('./routes/auth');
 /*
  * Adding right headers to responses
  * - Request Methods (GET and POST)
@@ -12,11 +14,11 @@ const { ObjectId } = require('mongodb');
  * - add mongodb
  */
 
-// import the db, users, posts collections
-const { UsersC, PostsC } = require('./db');
-
 // import dummy data
-require('../import-data');
+// require('../import-data');
+mongoose.connect('mongodb://localhost:27017/sb-backend', {useNewUrlParser: true, })
+ .then(res => console.log("conected..."))
+ .catch(err=>console.log("Error", err))
 
 // heruko sets a port on the PORT env var
 const PORT = process.env.PORT || 4000;
@@ -31,51 +33,12 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());  // parses application/json content
 app.use(bodyParser.text());  // parses text/plain content
 
-app.get('/posts', async (req, res) => {
-  const posts = await PostsC.find().toArray(); // get posts cursor, convert to array
-
-  res.send(posts); // will stringify, set json headers, set status code
-});
-
-app.get('/users', async (req, res) => {
-  const users = await UsersC.find().toArray();  // get users cursor, convert to array
-
-  res.send(users);
-});
-
-// will get a particular user
-app.get('/users/:id', async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) // validate id as ObjectId
-  {let user = await UsersC.findOne({ _id: new ObjectId(req.params.id) }); // get a user by his _id
-  const obj = new ObjectId(req.params.id)
-  obj.toHexString()
-  if (user) {
-    res.send(user);
-  } else {
-    res.sendStatus(404);
-  }
-} else {
-  res.sendStatus(400);
-} } )
-
-// will get a particular post
-app.get('/posts/:id', async (req, res) => {
-  if (ObjectId.isValid(req.params.id)) {
-  let post = await PostsC.findOne({ _id: new ObjectId(req.params.id) }); // get a post by _id
-
-  if (post) {
-    res.send(post);
-  } else {
-    res.sendStatus(404);
-  }
-} else {
-  res.sendStatus(400).send("User ID does not meet the required standards");
-}
-});
-
-app.post('/users', (req, res) => {
-  res.send(req.body);
-});
+// posts
+app.use('/posts', postRouter);
+// users 
+app.use('/users', userRouter);
+// user auth
+app.use('/api/v1/auth', authRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello World\n');

@@ -1,5 +1,6 @@
 # ignore IDE files
 .idea
+.env
 
 # don't include dependencies
 node_modules/
