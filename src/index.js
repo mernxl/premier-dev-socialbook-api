@@ -2,10 +2,11 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const userRouter = require('./routes/users');
 const postRouter = require('./routes/posts');
-const commentRouter = require('./routes/comments');
+const commentRouter = require('./routes/posts');
 const authRouter = require('./routes/auth');
 /*
  * Adding right headers to responses
