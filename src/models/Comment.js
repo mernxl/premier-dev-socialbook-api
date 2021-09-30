@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 // const User = require('./User');
 
 const commentSchema = new mongoose.Schema({
+  post: {
+    type: mongoose.Schema.types.ObjectId,
+    ref: "Post"
+  },
   user: {
     type: mongoose.Schema.types.ObjectId,
     ref: "User"
