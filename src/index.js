@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const userRouter = require('./routes/users');
 const postRouter = require('./routes/posts');
+const commentRouter = require('./routes/comments');
 const authRouter = require('./routes/auth');
 /*
  * Adding right headers to responses
@@ -33,6 +34,8 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());  // parses application/json content
 app.use(bodyParser.text());  // parses text/plain content
 
+// comments
+app.use('/comments', commentRouter);
 // posts
 app.use('/posts', postRouter);
 // users 
